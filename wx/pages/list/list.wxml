@@ -1,0 +1,9 @@
+<!-- list.wxml -->
+<import src="../component/list.wxml"/>
+<view class='container'>
+  <template is = 'list_tpl' data="{{arrList:arr}}"></template>
+  <view wx:if="{{channel=='app'}}">
+  app
+  </view>
+  <view wx:elif="{{channel=='pc'}}">pc</view>
+</view>
