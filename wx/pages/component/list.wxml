@@ -1,5 +1,0 @@
-<!-- list/list.wxml template -->
-<wxs src="./component.wxs" module="com" />
-<template name="list_tpl">
-<view wx:for="{{arrList}}" wx:key="name">{{index}}-{{item.name}}-{{com.name(item.name)}}</view>
-</template>

@@ -1,0 +1,3 @@
+<view >
+ <button class="audio"  bindtouchstart='startRecord' bindtouchend='endRecord'>开始录音</button> 
+</view>

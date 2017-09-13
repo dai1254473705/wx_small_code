@@ -1,58 +1,65 @@
 //index.js
 //获取应用实例
 const app = getApp()
+
 Page({
   data: {
-    "swiperImg":[
-      { "name": "001", "src":"http://img1.imgtn.bdimg.com/it/u=3469073068,3426495253&fm=11&gp=0.jpg"},
-      { "name": "002", "src":"http://img0.ph.126.net/eRv-A9o1L8v4MKZbiobhow==/6608664116770962144.jpg" },
-      { "name": "003", "src": "http://img0.ph.126.net/XjXl3KcowmXdE1pcsFVe8g==/1067353111787095545.jpg" },
-      { "name": "004", "src": "http://www.laozhq.cn/UploadFile/2013-2/20132274451175515.jpg" }
-    ],
-    indicatorDots: true,
-    autoplay: true,
-    interval: 5000,
-    duration: 1000,
-    indicator_active_color:"#fff",
-    date:"2017-03-01"
+    motto: 'Hello World',
+    userInfo: {},
+    hasUserInfo: false,
+    bidData:{},
+    recordsTotal:0,
+    pageIndex:1,
+    pageSize:5,
+    canIUse: wx.canIUse('button.open-type.getUserInfo')
   },
   //事件处理函数
   bindViewTap: function() {
-    console.log("点击头像");
-    console.log(this.route);
-
     wx.navigateTo({
       url: '../logs/logs'
     })
   },
-  bindDateChange:function(e){
-    console.log(e);
-    this.setData({
-      "date":e.detail.value
+  //获取标的列表
+  getBidList:function(){
+    wx.request({
+      url: "http://api.xiaobaijinrong.com.cn/web/v1/api/0/bid/list",
+      method: "POST",
+      dataType: "json",
+      data:{
+        'pageIndex': this.data.pageIndex,
+        'pageSize': this.data.pageSize,
+        'queryType': '0'
+      },
+      header: {
+        'content-type': 'application/json'
+      },
+      success: res => {
+        console.log(res);
+        if (res.data.retCode === 'SUCCESS') {
+          wx.showToast({
+            title: '成功',
+            icon: 'success',
+            mask:'true',
+            duration: 2000
+          })
+          this.setData({ bidData: res.data.data.records, recordsTotal: res.data.data.recordsTotal });
+        }
+      },
+      fail: res => {
+        console.group("===Fail Start===");
+        wx.showToast({
+          title: '失败',
+          icon: 'success',
+          mask: 'true',
+          duration: 2000
+        })
+      },
+      complete: res => {
+        wx.hideLoading();
+        wx.stopPullDownRefresh();
+        console.log("request end");
+      }
     })
-  },
-  onPullDownRefresh:function(){
-    console.log("正在刷新");
-    setTimeout(function(){
-      console.log("刷新结束");
-      wx.stopPullDownRefresh();
-    },2000)
-  },
-  onReachBottom:function(){
-    console.log("正在上拉刷新");
-  },
-  onPageScroll:function(e){
-    this.setData({
-      "position":e.scrollTop
-    },function(){
-      console.log("完成");
-    });
-  },
-  onShareAppMessage:function(){
-    return {
-      "title":"测试分享",
-      "path":'/pages/index/index'
-    }
   },
   onLoad: function () {
     if (app.globalData.userInfo) {
@@ -81,16 +88,35 @@ Page({
         }
       })
     }
-    // wx.getLocation({
-    //   type: 'wgs84',
-    //   success: function (res) {
-    //     var latitude = res.latitude
-    //     var longitude = res.longitude
-    //     var speed = res.speed
-    //     var accuracy = res.accuracy
-    //     console.log(res);
-    //   }
-    // })
+    wx.showLoading({
+      title: '加载中……',
+      mask: 'true'
+    })
+    this.getBidList();
+  },
+  
+  onPullDownRefresh: function () {
+    // Do something when pull down.
+    console.log(this.data.recordsTotal / this.data.pageSize);
+    wx.showLoading({
+      title: '加载中……',
+      mask: 'true'
+    })
+    if ((this.data.recordsTotal / this.data.pageSize) < this.data.pageIndex){
+      console.log("没有更多");
+      wx.hideLoading();
+      wx.showToast({
+        title: '没有更多了',
+        icon: 'success',
+        mask: 'true',
+        duration: 2000
+      })
+    }else{
+    this.setData({pageIndex:this.data.pageIndex+1 })
+      console.log("下拉刷新");
+      this.getBidList();
+    }
+    
   },
   getUserInfo: function(e) {
     console.log(e)

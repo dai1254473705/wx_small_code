@@ -1,23 +1,15 @@
 <!--index.wxml-->
 <view class="container">
-  <!-- swiepr  -->
-  <swiper class="swiper_container" indicator-dots="{{indicatorDots}}"
-  autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}" indicator-active-color="{{indicator_active_color}}">
-  <block wx:for='{{swiperImg}}' wx:key="{{name}}">
-    <swiper-item>
-      <image src="{{item.src}}" class="slide-image"/>
-    </swiper-item>
-  </block>
-  </swiper>
-  
-  <!-- picker -->
-  <view class="section">
-    <picker mode="date" value="{{date}}" start="2015-09-01" end="2017-09-01" bindchange="bindDateChange">
-      <view class="picker">
-      <button size="mini" type="primary" loading="" class="picker_choose_btn">选择日期</button>
-      <input class="picker_choose_input" placeholder="日期选择器" auto-focus value="{{date}}"/>
-      </view>
-    </picker>
+  <!-- <view class="userinfo">
+    <button wx:if="{{!hasUserInfo && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称 </button>
+    <block wx:else>
+      <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" background-size="cover"></image>
+      <text class="userinfo-nickname">{{userInfo.nickName}}</text>
+    </block>
   </view>
-
+  <view class="usermotto">
+    <text class="user-motto">{{motto}}</text>
+  </view> -->
+<import src="../component/bidTpl/bidlist/bidlist.wxml"/>
+<template is="bidlist" data="{{bidData}}"/>
 </view>

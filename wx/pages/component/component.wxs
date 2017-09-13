@@ -1,8 +1,0 @@
-// 组件模块
-var  str = 'sdfsdf';
-var com = function (ss){
-  return ss + str;
-}
-module.exports = {
-  name:com
-};
